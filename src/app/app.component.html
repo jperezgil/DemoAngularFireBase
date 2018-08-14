@@ -1,0 +1,77 @@
+<!-- Main jumbotron for a primary marketing message or call to action -->
+<table style="width: 80%;">
+  <tr>
+  <td style="width: 15%;">
+      <div class="jumbotron" style="background-color: #6b5e5d;">
+          <div class="container">
+            <h1 class="display-3">{{title}}</h1>
+            <form class="form-inline" [formGroup]="personaForm" (ngSubmit)="onPersonaFormSubmit()">
+              <label class="sr-only" for="Nombre">Nombre</label>
+              <input type="text" class="form-control mb-2 mr-sm-2" id="Nombre" formControlName="Nombre" placeholder="Ingrese sus Nombre" [ngClass]="{'error': validarCampo('Nombre') }">
+              <label class="sr-only" for="Apellidos">Apellidos</label>
+              <input type="text" class="form-control mb-2 mr-sm-2" id="Apellidos" formControlName="Apellidos" placeholder="Ingrese sus Apellidos"  [ngClass]="{'error': validarCampo('Apellidos')}">
+              <label class="sr-only" for="Dni">DNI</label>
+              <input type="text" class="form-control mb-2 mr-sm-2" id="Dni" placeholder="Ingrese su DNI" formControlName="Dni" maxlength="8" onkeydown="return ((event.keyCode >= 48 && event.keyCode <= 57) || event.keyCode==8||(event.keyCode >= 96 && event.keyCode <= 105) );" [ngClass]="{'error': validarCampo('Dni')}" >&ensp;&ensp;
+              &ensp;<button type="submit" class="form-control btn btn-primary mb-2" *ngIf="!personaIdToUpdate">Agregar</button>
+              &ensp;<button type="submit" class="form-control btn btn-primary mb-2" *ngIf="personaIdToUpdate">Editar</button>
+              &ensp;<button type="submit" class="form-control btn btn-secondary mb-2" (click)="backToCrearPersona()" *ngIf="personaIdToUpdate">Cancelar</button>              
+            </form>
+            <br/>
+            <div *ngIf="statusCode; else processing">
+              <div *ngIf="statusCode === 201" [ngClass] = "'success'">
+                  Persona agregada con éxito.
+              </div>   
+              <div *ngIf="statusCode === 409" [ngClass] = "'success'">
+                  La Persona ya existe.
+              </div>   	
+              <div *ngIf="statusCode === 200" [ngClass] = "'success'">
+                  Datos de la Persona actualizados con éxito.
+              </div>   	      
+              <div *ngIf="statusCode === 204" [ngClass] = "'success'">
+                  La Persona ha sido eliminada.
+              </div>   	   
+              <div *ngIf="statusCode === 500" [ngClass] = "'error'">
+                  Internal Server Error.
+              </div>	
+            </div>
+            <ng-template #processing>
+                <img *ngIf="requestProcessing" src="assets/img/spinner.gif" class="spinner">
+            </ng-template>
+          </div>
+        </div>
+  </td>
+  <td>
+      <div class="container">
+          <div class="row">
+            <div class="col-md-12">
+                <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Apellido</th>
+                        <th scope="col">DNI</th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let persona of allPersonas; let i = index;">
+                        <th scope="row">{{i+1}}</th>
+                        <td>{{persona.Nombre}}</td>
+                        <td>{{persona.Apellidos}}</td>
+                        <td>{{persona.Dni}}</td>
+                        <td><button type="button" class="btn btn-primary" (click)="editarPersona(persona.$key)">Editar</button></td>
+                        <td><button type="button" class="btn btn-danger" (click)="borrarPersona(persona.$key)">Eliminar</button></td>
+                      </tr>
+                    </tbody>
+                  </table>
+            </div> 
+          </div>
+          <hr>
+        </div>
+  </td>
+  </tr>
+</table>
+
+ 
